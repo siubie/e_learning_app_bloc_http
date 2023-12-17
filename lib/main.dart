@@ -1,7 +1,15 @@
+import 'package:e_learning/bloc/login/login_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    //add bloc provider to the app
+    BlocProvider(
+      create: (context) => LoginBloc(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -57,6 +65,30 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const Spacer(),
+            //add bloc builder to the login page
+            BlocBuilder<LoginBloc, LoginState>(
+              builder: (context, state) {
+                //check if the state is LoginSuccess
+                if (state is LoginSuccess) {
+                  //show the success message
+                  return Text(state.message);
+                }
+                //check if the state is LoginFailed
+                if (state is LoginFailed) {
+                  //show the failed message
+                  return Text(state.message);
+                }
+                //check if the state is LoginInProgress
+                if (state is LoginInProgress) {
+                  //show the progress indicator
+                  return const CircularProgressIndicator();
+                }
+                //show empty text
+                return const Text('');
+              },
+            ),
+            // add space between text fields and button
+            const Spacer(),
             // create text field for identifier
             const TextField(
               decoration: InputDecoration(
@@ -81,7 +113,15 @@ class _MyHomePageState extends State<MyHomePage> {
               width: double.infinity,
               height: 50, // Set the desired height value
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  //add event for login button pressed
+                  context.read<LoginBloc>().add(
+                        LoginButtonPressed(
+                          'dosenNgoding',
+                          '123456',
+                        ),
+                      );
+                },
                 style: ElevatedButton.styleFrom(
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.zero,
@@ -92,6 +132,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   'Login',
                   style: TextStyle(
                     color: Colors.white, // Change text color to white
+                    fontSize: 20, // Set the desired font size
+                    fontWeight: FontWeight.bold, // Set the font weight to bold
                   ),
                 ),
               ),
