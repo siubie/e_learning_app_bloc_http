@@ -41,6 +41,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  //add text editing controller for identifier
+  final TextEditingController _identifierController =
+      TextEditingController(text: "admin");
+  //add text editing controller for password
+  final TextEditingController _passwordController =
+      TextEditingController(text: "12345678");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +80,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 //check if the state is LoginSuccess
                 if (state is LoginSuccess) {
                   //show the success message
-                  return Text(state.message);
+                  return Column(
+                    children: [
+                      //add identifier
+                      Text(
+                        state.loginResponse.user!.username.toString(),
+                      ),
+                      Text(
+                        state.loginResponse.jwt.toString(),
+                      ),
+                    ],
+                  );
                 }
                 //check if the state is LoginFailed
                 if (state is LoginFailed) {
@@ -93,8 +109,10 @@ class _MyHomePageState extends State<MyHomePage> {
             // add space between text fields and button
             const Spacer(),
             // create text field for identifier
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller:
+                  _identifierController, // Assign the controller property outside of the constant context
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Identifier',
               ),
@@ -102,9 +120,11 @@ class _MyHomePageState extends State<MyHomePage> {
             //add space between text fields
             const SizedBox(height: 10),
             //create text field for password
-            const TextField(
+            TextField(
+              //add controller to the text field
+              controller: _passwordController,
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Password',
               ),
@@ -120,8 +140,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   //add event for login button pressed
                   context.read<LoginBloc>().add(
                         LoginButtonPressed(
-                          'admin',
-                          '12345678',
+                          _identifierController.text,
+                          _passwordController.text,
                         ),
                       );
                 },

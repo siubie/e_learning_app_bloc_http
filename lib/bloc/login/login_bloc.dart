@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:e_learning/data/repository/api_repository.dart';
+import 'package:e_learning/data/response/login_response/login_response.dart';
 import 'package:meta/meta.dart';
 
 part 'login_event.dart';
@@ -16,10 +17,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(LoginInProgress());
         //add checking to apiRepository authenticate
         try {
-          final message = await apiRepository.authenticate(
+          final response = await apiRepository.authenticate(
               event.identifier, event.password);
           //add state for LoginSuccess
-          emit(LoginSuccess(message));
+          emit(LoginSuccess(response));
         } catch (e) {
           //add state for LoginFailed
           emit(LoginFailed(e.toString()));

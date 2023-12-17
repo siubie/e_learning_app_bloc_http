@@ -7,9 +7,8 @@ final class LoginInitial extends LoginState {}
 
 //add state for login success
 final class LoginSuccess extends LoginState {
-  final String message;
-
-  LoginSuccess(this.message);
+  final LoginResponse loginResponse;
+  LoginSuccess(this.loginResponse);
 }
 
 //add state for login failed
