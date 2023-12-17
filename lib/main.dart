@@ -1,4 +1,5 @@
 import 'package:e_learning/bloc/login/login_bloc.dart';
+import 'package:e_learning/data/repository/api_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,7 +7,9 @@ void main() {
   runApp(
     //add bloc provider to the app
     BlocProvider(
-      create: (context) => LoginBloc(),
+      create: (context) => LoginBloc(
+        ApiRepository(),
+      ),
       child: const MyApp(),
     ),
   );
@@ -117,8 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   //add event for login button pressed
                   context.read<LoginBloc>().add(
                         LoginButtonPressed(
-                          'dosenNgoding',
-                          '123456',
+                          'admin',
+                          '12345678',
                         ),
                       );
                 },
