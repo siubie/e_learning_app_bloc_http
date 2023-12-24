@@ -14,11 +14,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       //add event handler for LoginButtonPressed
       if (event is LoginButtonPressed) {
         //add state for LoginInProgress
+        //add 3 second delay
         emit(LoginInProgress());
+        await Future.delayed(const Duration(seconds: 3));
         //add checking to apiRepository authenticate
         try {
           final response = await apiRepository.authenticate(
               event.identifier, event.password);
+          //set token to shared preferences
+          await apiRepository.saveTokenToPrefs(
+            response.jwt.toString(),
+          );
           //add state for LoginSuccess
           emit(LoginSuccess(response));
         } catch (e) {
