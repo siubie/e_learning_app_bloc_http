@@ -16,7 +16,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         //add state for LoginInProgress
         //add 3 second delay
         emit(LoginInProgress());
-        await Future.delayed(const Duration(seconds: 3));
         //add checking to apiRepository authenticate
         try {
           final response = await apiRepository.authenticate(
