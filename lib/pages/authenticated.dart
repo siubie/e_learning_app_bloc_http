@@ -10,7 +10,7 @@ class AuthenticatedPage extends StatelessWidget {
         title: const Text('Authenticated Page'),
       ),
       body: const Center(
-        child: Text('Welcome to the Authenticated Page!'),
+        child: Text("Welcome to Authenticated Page"),
       ),
     );
   }

@@ -40,4 +40,12 @@ class ApiRepository {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
   }
+
+  //make future function to get the token from shared preferences
+  Future<String?> getTokenFromPrefs() async {
+    //get shared preferences instance
+    final prefs = await SharedPreferences.getInstance();
+    //get the token
+    return prefs.getString('token');
+  }
 }
