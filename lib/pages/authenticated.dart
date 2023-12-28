@@ -1,4 +1,5 @@
 import 'package:e_learning/bloc/authenticated_page/authenticated_page_bloc.dart';
+import 'package:e_learning/bloc/course/course_bloc.dart';
 import 'package:e_learning/data/repository/api_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,30 +14,40 @@ class AuthenticatedPage extends StatelessWidget {
         title: const Text('Authenticated Page'),
       ),
       body: BlocProvider(
-        create: (context) => AuthenticatedPageBloc(
-          ApiRepository(),
-        )..add(GetToken()),
-        child: BlocBuilder<AuthenticatedPageBloc, AuthenticatedPageState>(
-          builder: (context, state) {
-            if (state is AuthenticatedPageInitial) {
+          create: (context) => CourseBloc(
+                ApiRepository(),
+              )..add(
+                  GetCourse(),
+                ),
+          child: BlocBuilder<CourseBloc, CourseState>(
+            builder: (context, state) {
+              if (state is CourseInitial) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state is CourseLoaded) {
+                final courses = state.courseResponse.data;
+                //return list view builder with the course response
+                return ListView.builder(
+                  itemCount: courses?.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                        courses?[index].attributes?.name ?? '',
+                      ),
+                    );
+                  },
+                );
+              }
+              if (state is CourseFailed) {
+                return Center(
+                  child: Text(state.message),
+                );
+              }
               return Container();
-            } else if (state is AuthenticatedPageLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (state is AuthenticatedPageSuccess) {
-              return Center(
-                child: Text(state.message),
-              );
-            } else if (state is AuthenticatedPageFailed) {
-              return Center(
-                child: Text(state.message),
-              );
-            }
-            return Container();
-          },
-        ),
-      ),
+            },
+          )),
     );
   }
 }

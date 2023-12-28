@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:e_learning/data/response/course_response/course_response.dart';
 import 'package:e_learning/data/response/login_response/login_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,6 +32,32 @@ class ApiRepository {
     } else {
       //return the error message
       throw Exception('Failed to authenticate');
+    }
+  }
+
+  //make future function to request the course api in http://192.168.1.114:1337/api/courses and return the response
+  Future<CourseResponse> getCourses() async {
+    //make the response variable
+    final token = await getTokenFromPrefs();
+    //make the get request
+    final response = await http.get(
+      //kalo mau konek pake emulator
+      Uri.parse('http://192.168.1.114:1337/api/courses'),
+      //add header to the request
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        //add bearer token to the request
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    //add checking for the response
+    if (response.statusCode == 200) {
+      //return the response body
+      return CourseResponse.fromJson(response.body);
+    } else {
+      //return the error message
+      throw Exception('Failed to load courses');
     }
   }
 
