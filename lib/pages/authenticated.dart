@@ -1,6 +1,7 @@
 import 'package:e_learning/bloc/authenticated_page/authenticated_page_bloc.dart';
 import 'package:e_learning/bloc/course/course_bloc.dart';
 import 'package:e_learning/data/repository/api_repository.dart';
+import 'package:e_learning/pages/course_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,9 +33,19 @@ class AuthenticatedPage extends StatelessWidget {
                 return ListView.builder(
                   itemCount: courses?.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(
-                        courses?[index].attributes?.name ?? '',
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CourseListPage(courseId: courses?[index].id),
+                          ),
+                        );
+                      },
+                      child: ListTile(
+                        title: Text(
+                          courses?[index].attributes?.name ?? '',
+                        ),
                       ),
                     );
                   },
