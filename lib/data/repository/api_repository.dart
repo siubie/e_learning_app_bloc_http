@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:e_learning/data/response/chapter_response/chapter_response.dart';
 import 'package:e_learning/data/response/course_response/course_response.dart';
 import 'package:e_learning/data/response/login_response/login_response.dart';
 import 'package:http/http.dart' as http;
@@ -74,5 +75,37 @@ class ApiRepository {
     final prefs = await SharedPreferences.getInstance();
     //get the token
     return prefs.getString('token');
+  }
+
+  //make future function to request chapterResponse
+  Future<ChapterResponse> getChapters(int courseId) async {
+    //make the response variable
+    final token = await getTokenFromPrefs();
+    //make the get request
+    final response = await http.get(
+      //kalo mau konek pake emulator
+      Uri.parse(
+        'http://192.168.1.114:1337/api/courses/$courseId?populate[0]=chapters',
+      ),
+      //add header
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        //add bearer token to the request
+        'Authorization': 'Bearer $token',
+      },
+    );
+    // print(response.body);
+    // print(courseId);
+    //add checking for the response
+    if (response.statusCode == 200) {
+      //return the response body
+      final jsonData = jsonDecode(response.body);
+      return ChapterResponse.fromJson(
+        jsonData["data"]["attributes"]["chapters"],
+      );
+    } else {
+      //return the error message
+      throw Exception('Failed to load chapters');
+    }
   }
 }
